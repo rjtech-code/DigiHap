@@ -247,6 +247,28 @@ const hi = {
   
   // Empty states
   noData: "कोई डेटा उपलब्ध नहीं",
+  
+  // Map & Nearby Places
+  nearbyPlaces: "आस-पास के स्थान",
+  publicToilet: "सार्वजनिक शौचालय",
+  publicPark: "सार्वजनिक पार्क",
+  filterAll: "सभी",
+  searchPlaces: "स्थान खोजें...",
+  loadingMap: "मानचित्र लोड हो रहा है...",
+  mapError: "मानचित्र अनुपलब्ध",
+  mapApiKeyMissing: "Google Maps API कुंजी कॉन्फ़िगर नहीं है। कृपया अपनी .env फ़ाइल में VITE_GOOGLE_MAPS_API_KEY सेट करें।",
+  mapLoadError: "Google Maps लोड करने में विफल",
+  searchingPlaces: "आस-पास के स्थान खोजे जा रहे हैं...",
+  noPlacesFound: "आस-पास कोई स्थान नहीं मिला",
+  navigate: "नेविगेट करें",
+  away: "दूर",
+  openInGoogleMaps: "Google Maps में खोलें",
+  nearbyMap: "आस-पास का मानचित्र",
+  openMap: "मानचित्र खोलें",
+  toilets: "शौचालय",
+  parks: "पार्क",
+  searchOnMap: 'आस-पास के स्थानों को खोजने के लिए मानचित्र पर "सार्वजनिक शौचालय" या "पार्क" खोजें',
+  mapEmbedHint: 'चूरू में सार्वजनिक शौचालयों, पार्कों और अन्य स्थानों को खोजने के लिए मानचित्र पर खोज बार का उपयोग करें',
 };
 
 export default hi;

@@ -247,6 +247,28 @@ const en = {
   
   // Empty states
   noData: "No data available",
+  
+  // Map & Nearby Places
+  nearbyPlaces: "Nearby Places",
+  publicToilet: "Public Toilet",
+  publicPark: "Public Park",
+  filterAll: "All",
+  searchPlaces: "Search places...",
+  loadingMap: "Loading map...",
+  mapError: "Map unavailable",
+  mapApiKeyMissing: "Google Maps API key not configured. Please set VITE_GOOGLE_MAPS_API_KEY in your .env file.",
+  mapLoadError: "Failed to load Google Maps",
+  searchingPlaces: "Searching nearby places...",
+  noPlacesFound: "No places found nearby",
+  navigate: "Navigate",
+  away: "away",
+  openInGoogleMaps: "Open in Google Maps",
+  nearbyMap: "Nearby Map",
+  openMap: "Open Map",
+  toilets: "Toilets",
+  parks: "Parks",
+  searchOnMap: 'Search for "public toilets" or "parks" on the map to find nearby places',
+  mapEmbedHint: 'Use the search bar on the map to find public toilets, parks, and other places in Churu',
 };
 
 export default en;

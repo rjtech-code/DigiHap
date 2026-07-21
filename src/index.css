@@ -49,3 +49,45 @@ html {
 .animate-fadeIn {
   animation: fadeIn 0.3s ease-out;
 }
+
+/* Slide up animation for mobile map panel */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slideUp {
+  animation: slideUp 0.35s ease-out;
+}
+
+/* Slide down animation for mobile map panel closing */
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.animate-slideDown {
+  animation: slideDown 0.3s ease-in forwards;
+}
+
+/* Pulse animation for floating button */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(5, 150, 105, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(5, 150, 105, 0);
+  }
+}
+
+.animate-pulse-green {
+  animation: pulse 2s infinite;
+}
