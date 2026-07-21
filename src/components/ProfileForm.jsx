@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLanguage } from '../hooks/useLanguage';
 import ProfileCard from './ProfileCard';
 import ImageUploader from './ImageUploader';
 import NotificationSettings from './NotificationSettings';
@@ -20,6 +21,8 @@ const ProfileForm = ({
   onEdit,
   isSaving = false
 }) => {
+  const { t } = useLanguage();
+
   const medicalConditionOptions = [
     'Diabetes',
     'Heart Disease',
@@ -44,11 +47,27 @@ const ProfileForm = ({
     onChange({ ...formData, [key]: value });
   };
 
+  // Map conditions to translation keys
+  const getConditionLabel = (condition) => {
+    const conditionMap = {
+      'Diabetes': t('conditionDiabetes'),
+      'Heart Disease': t('conditionHeartDisease'),
+      'Asthma': t('conditionAsthma'),
+      'Hypertension': t('conditionHypertension'),
+      'Elderly (65+)': t('conditionElderly'),
+      'Pregnant': t('conditionPregnant'),
+      'Respiratory Issues': t('conditionRespiratory'),
+      'Kidney Disease': t('conditionKidney'),
+      'None': t('conditionNone'),
+    };
+    return conditionMap[condition] || condition;
+  };
+
   return (
     <div className="space-y-6">
       {/* Personal Information */}
       <ProfileCard 
-        title="Personal Information" 
+        title={t('personalInformation')} 
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -59,7 +78,7 @@ const ProfileForm = ({
           {/* Profile Photo Upload */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Profile Photo
+              {t('profilePhoto')}
             </label>
             <ImageUploader
               currentImage={formData.profilePhoto}
@@ -72,14 +91,14 @@ const ProfileForm = ({
           {/* Full Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Full Name <span className="text-red-500">*</span>
+              {t('fullName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleInputChange}
-              placeholder="Enter your full name"
+              placeholder={t('enterFullName')}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
                 errors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -92,7 +111,7 @@ const ProfileForm = ({
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Gender <span className="text-red-500">*</span>
+                {t('gender')} <span className="text-red-500">*</span>
               </label>
               <select
                 name="gender"
@@ -103,17 +122,17 @@ const ProfileForm = ({
                   errors.gender ? 'border-red-300 bg-red-50' : 'border-gray-300'
                 } ${!isEditing ? 'bg-gray-50' : ''}`}
               >
-                <option value="">Select gender</option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Other">Other</option>
+                <option value="">{t('selectGender')}</option>
+                <option value="Male">{t('male')}</option>
+                <option value="Female">{t('female')}</option>
+                <option value="Other">{t('other')}</option>
               </select>
               {errors.gender && <p className="text-red-600 text-xs mt-1">{errors.gender}</p>}
             </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date of Birth <span className="text-red-500">*</span>
+                {t('dateOfBirth')} <span className="text-red-500">*</span>
               </label>
               <input
                 type="date"
@@ -133,7 +152,7 @@ const ProfileForm = ({
 
       {/* Contact Information */}
       <ProfileCard 
-        title="Contact Information" 
+        title={t('contactInformation')} 
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
@@ -144,14 +163,14 @@ const ProfileForm = ({
           {/* Mobile Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Mobile Number <span className="text-red-500">*</span>
+              {t('mobileNumber')} <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
               name="mobileNumber"
               value={formData.mobileNumber}
               onChange={handleInputChange}
-              placeholder="Enter 10-digit mobile number"
+              placeholder={t('enterMobileNumber')}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
                 errors.mobileNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -163,14 +182,14 @@ const ProfileForm = ({
           {/* Email */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Email Address <span className="text-red-500">*</span>
+              {t('emailAddress')} <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleInputChange}
-              placeholder="Enter your email address"
+              placeholder={t('enterEmail')}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
                 errors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -182,13 +201,13 @@ const ProfileForm = ({
           {/* Address */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Address <span className="text-red-500">*</span>
+              {t('address')} <span className="text-red-500">*</span>
             </label>
             <textarea
               name="address"
               value={formData.address}
               onChange={handleInputChange}
-              placeholder="Enter your full address"
+              placeholder={t('enterAddress')}
               rows={3}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
@@ -201,7 +220,7 @@ const ProfileForm = ({
           {/* Ward Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ward Number <span className="text-red-500">*</span>
+              {t('wardNumber')} <span className="text-red-500">*</span>
             </label>
             <select
               name="wardNumber"
@@ -212,9 +231,9 @@ const ProfileForm = ({
                 errors.wardNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
               } ${!isEditing ? 'bg-gray-50' : ''}`}
             >
-              <option value="">Select ward number</option>
+              <option value="">{t('selectWard')}</option>
               {wardNumbers.map(n => (
-                <option key={n} value={n}>Ward {n}</option>
+                <option key={n} value={n}>{t('ward')} {n}</option>
               ))}
             </select>
             {errors.wardNumber && <p className="text-red-600 text-xs mt-1">{errors.wardNumber}</p>}
@@ -224,7 +243,7 @@ const ProfileForm = ({
 
       {/* Emergency Information */}
       <ProfileCard 
-        title="Emergency Information" 
+        title={t('emergencyInformation')} 
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -235,14 +254,14 @@ const ProfileForm = ({
           {/* Emergency Contact Name */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Emergency Contact Name <span className="text-red-500">*</span>
+              {t('emergencyContactName')} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               name="emergencyContactName"
               value={formData.emergencyContactName}
               onChange={handleInputChange}
-              placeholder="Enter emergency contact name"
+              placeholder={t('enterEmergencyName')}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
                 errors.emergencyContactName ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -254,14 +273,14 @@ const ProfileForm = ({
           {/* Emergency Contact Number */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Emergency Contact Number <span className="text-red-500">*</span>
+              {t('emergencyContactNumber')} <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
               name="emergencyContactNumber"
               value={formData.emergencyContactNumber}
               onChange={handleInputChange}
-              placeholder="Enter 10-digit mobile number"
+              placeholder={t('enterEmergencyNumber')}
               disabled={!isEditing}
               className={`w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all ${
                 errors.emergencyContactNumber ? 'border-red-300 bg-red-50' : 'border-gray-300'
@@ -274,7 +293,7 @@ const ProfileForm = ({
 
       {/* Health Information */}
       <ProfileCard 
-        title="Health Information" 
+        title={t('healthInformation')} 
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -285,7 +304,7 @@ const ProfileForm = ({
           {/* Blood Group */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Blood Group
+              {t('bloodGroup')}
             </label>
             <select
               name="bloodGroup"
@@ -296,7 +315,7 @@ const ProfileForm = ({
                 errors.bloodGroup ? 'border-red-300 bg-red-50' : 'border-gray-300'
               } ${!isEditing ? 'bg-gray-50' : ''}`}
             >
-              <option value="">Select blood group</option>
+              <option value="">{t('selectBloodGroup')}</option>
               <option value="A+">A+</option>
               <option value="A-">A-</option>
               <option value="B+">B+</option>
@@ -312,7 +331,7 @@ const ProfileForm = ({
           {/* Medical Conditions */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">
-              Existing Medical Conditions
+              {t('medicalConditions')}
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {medicalConditionOptions.map(condition => (
@@ -334,7 +353,7 @@ const ProfileForm = ({
                     disabled={!isEditing}
                     className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                   />
-                  <span className="text-sm text-gray-700">{condition}</span>
+                  <span className="text-sm text-gray-700">{getConditionLabel(condition)}</span>
                 </label>
               ))}
             </div>
@@ -343,7 +362,7 @@ const ProfileForm = ({
           {/* Preferred Language */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Preferred Language
+              {t('preferredLanguage')}
             </label>
             <select
               name="preferredLanguage"
@@ -354,8 +373,8 @@ const ProfileForm = ({
                 !isEditing ? 'bg-gray-50' : 'border-gray-300'
               }`}
             >
-              <option value="english">English</option>
-              <option value="hindi">Hindi</option>
+              <option value="english">{t('languageEnglish')}</option>
+              <option value="hindi">{t('languageHindi')}</option>
             </select>
           </div>
         </div>
@@ -363,7 +382,7 @@ const ProfileForm = ({
 
       {/* Notification Preferences */}
       <ProfileCard 
-        title="Notification Preferences" 
+        title={t('notificationPreferences')} 
         icon={
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
@@ -390,14 +409,14 @@ const ProfileForm = ({
             disabled={isSaving}
             className="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSaving ? 'Saving...' : 'Save Profile'}
+            {isSaving ? t('saving') : t('saveProfile')}
           </button>
           <button
             onClick={onCancel}
             disabled={isSaving}
             className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Cancel
+            {t('cancel')}
           </button>
         </div>
       ) : (
@@ -406,7 +425,7 @@ const ProfileForm = ({
             onClick={onEdit}
             className="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm"
           >
-            Edit Profile
+            {t('editProfileBtn')}
           </button>
         </div>
       )}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { wards } from '../data/wards';
 import { fetchWeather } from '../services/weatherApi';
+import { useLanguage } from '../hooks/useLanguage';
 import WardCard from '../components/WardCard';
 import SearchBar from '../components/SearchBar';
 import Loader from '../components/Loader';
@@ -10,6 +11,7 @@ const Home = () => {
   const [weatherData, setWeatherData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { t } = useLanguage();
 
   useEffect(() => {
     loadWeatherData();
@@ -39,7 +41,7 @@ const Home = () => {
       
       setWeatherData(weatherMap);
     } catch (err) {
-      setError('Unable to load weather data. Please check your internet connection and try again.');
+      setError(t('errorLoadingData'));
     } finally {
       setLoading(false);
     }
@@ -68,12 +70,10 @@ const Home = () => {
         {/* Introduction */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
           <h2 className="text-xl font-semibold text-gray-800 mb-2">
-            Welcome to DigiHap
+            {t('welcomeToDigiHap')}
           </h2>
           <p className="text-gray-600 text-sm leading-relaxed">
-            Stay informed about heat conditions across all 60 wards of Churu. 
-            Get real-time temperature updates and personalized safety recommendations 
-            to protect yourself and your family from extreme heat.
+            {t('welcomeDescription')}
           </p>
         </div>
 
@@ -81,7 +81,7 @@ const Home = () => {
         <SearchBar
           value={searchQuery}
           onChange={setSearchQuery}
-          placeholder="Search wards by name..."
+          placeholder={t('searchPlaceholder')}
         />
 
         {/* Error Message */}
@@ -92,13 +92,13 @@ const Home = () => {
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
               <div>
-                <p className="text-red-800 font-medium text-sm">Error Loading Data</p>
+                <p className="text-red-800 font-medium text-sm">{t('errorLoadingData')}</p>
                 <p className="text-red-600 text-sm mt-1">{error}</p>
                 <button
                   onClick={loadWeatherData}
                   className="mt-3 px-4 py-2 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition-colors"
                 >
-                  Retry
+                  {t('retry')}
                 </button>
               </div>
             </div>
@@ -106,13 +106,13 @@ const Home = () => {
         )}
 
         {/* Loading State */}
-        {loading && <Loader message="Loading weather data for all wards..." />}
+        {loading && <Loader message={t('loadingWeatherData')} />}
 
         {/* Wards Grid */}
         {!loading && !error && (
           <>
             <div className="mb-4 text-sm text-gray-600">
-              Showing {filteredWards.length} of {wards.length} wards
+              {t('showingWards', { count: filteredWards.length, total: wards.length })}
             </div>
             
             {filteredWards.length === 0 ? (
@@ -120,8 +120,8 @@ const Home = () => {
                 <svg className="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <p className="text-gray-500 text-lg font-medium">No wards found</p>
-                <p className="text-gray-400 text-sm mt-1">Try adjusting your search query</p>
+                <p className="text-gray-500 text-lg font-medium">{t('noWardsFound')}</p>
+                <p className="text-gray-400 text-sm mt-1">{t('noWardsFoundDescription')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -142,7 +142,7 @@ const Home = () => {
       <footer className="bg-white border-t border-gray-200 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <p className="text-center text-gray-500 text-sm">
-            © 2024 DigiHap - Heat Awareness Platform | Churu, Rajasthan
+            {t('footerCopyright')}
           </p>
         </div>
       </footer>

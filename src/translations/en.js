@@ -1,0 +1,252 @@
+const en = {
+  // App
+  appTitle: "DigiHap",
+  
+  // Navbar
+  home: "Home",
+  myProfile: "My Profile",
+  profileMenu: "Profile menu",
+  noProfileCreated: "No profile created yet",
+  createProfile: "Create Profile",
+  percentComplete: "% Complete",
+  user: "User",
+  editProfile: "Edit Profile",
+  help: "Help",
+  logout: "Logout",
+  toggleMobileMenu: "Toggle mobile menu",
+  
+  // Language Switcher
+  languageEnglish: "English",
+  languageHindi: "हिन्दी",
+  
+  // Home Page
+  welcomeToDigiHap: "Welcome to DigiHap",
+  welcomeDescription: "Stay informed about heat conditions across all 60 wards of Churu. Get real-time temperature updates and personalized safety recommendations to protect yourself and your family from extreme heat.",
+  searchPlaceholder: "Search wards by name...",
+  showingWards: "Showing {count} of {total} wards",
+  noWardsFound: "No wards found",
+  noWardsFoundDescription: "Try adjusting your search query",
+  errorLoadingData: "Error Loading Data",
+  retry: "Retry",
+  loadingWeatherData: "Loading weather data for all wards...",
+  footerCopyright: "© 2024 DigiHap - Heat Awareness Platform | Churu, Rajasthan",
+  
+  // Ward Details
+  backToAllWards: "Back to All Wards",
+  wardNotFound: "Ward Not Found",
+  wardNotFoundDesc: "The ward you're looking for doesn't exist.",
+  goBackHome: "Go Back Home",
+  currentWeather: "Current Weather",
+  demoData: "Demo data (API unavailable)",
+  temperature: "Temperature",
+  feelsLike: "Feels like {temp}°C",
+  condition: "Condition",
+  humidity: "Humidity",
+  windSpeed: "Wind Speed",
+  kmh: "km/h",
+  lastUpdated: "Last updated: {time}",
+  generalHeatSafetyTips: "General Heat Safety Tips",
+  
+  // Weather Conditions (mapped)
+  sunny: "Sunny",
+  cloudy: "Cloudy",
+  rainy: "Rainy",
+  partlyCloudy: "Partly Cloudy",
+  clear: "Clear",
+  overcast: "Overcast",
+  hazy: "Hazy",
+  hot: "Hot",
+  veryHot: "Very Hot",
+  thunderstorm: "Thunderstorm",
+  windy: "Windy",
+  foggy: "Foggy",
+  
+  // Heat Levels
+  heatLevelNormal: "Normal",
+  heatLevelModerate: "Moderate",
+  heatLevelHigh: "High",
+  heatLevelExtreme: "Extreme",
+  heatDescNormal: "Comfortable conditions",
+  heatDescModerate: "Warm conditions - stay hydrated",
+  heatDescHigh: "Hot conditions - take precautions",
+  heatDescExtreme: "Extreme heat - avoid outdoor activities",
+  
+  // Safety Suggestions Titles
+  safetyNormal: "Normal Conditions",
+  safetyModerate: "Moderate Heat - Stay Alert",
+  safetyHigh: "High Heat - Take Precautions",
+  safetyExtreme: "Extreme Heat Alert - Danger",
+  safetyGeneral: "General Heat Safety Tips",
+  
+  // Safety Suggestions - Normal
+  safetyNormal1: "Enjoy your day with normal precautions",
+  safetyNormal2: "Stay hydrated by drinking water regularly",
+  safetyNormal3: "Wear comfortable, light clothing",
+  safetyNormal4: "Use sunscreen when going outdoors",
+  safetyNormal5: "Take breaks in shaded areas if needed",
+  
+  // Safety Suggestions - Moderate
+  safetyModerate1: "Drink plenty of water throughout the day",
+  safetyModerate2: "Wear light-colored, loose-fitting clothes",
+  safetyModerate3: "Avoid prolonged exposure to direct sunlight",
+  safetyModerate4: "Take frequent breaks in cool or shaded areas",
+  safetyModerate5: "Watch for signs of heat exhaustion",
+  safetyModerate6: "Limit outdoor activities during peak hours (12 PM - 4 PM)",
+  
+  // Safety Suggestions - High
+  safetyHigh1: "Avoid outdoor activities as much as possible",
+  safetyHigh2: "Drink water every 15-20 minutes, even if not thirsty",
+  safetyHigh3: "Wear a hat, sunglasses, and sunscreen (SPF 30+)",
+  safetyHigh4: "Stay in air-conditioned or well-ventilated areas",
+  safetyHigh5: "Check on elderly family members and neighbors",
+  safetyHigh6: "Never leave children or pets in parked vehicles",
+  safetyHigh7: "Reschedule outdoor work to early morning or evening",
+  safetyHigh8: "Recognize signs of heat stroke: high body temperature, confusion, loss of consciousness",
+  
+  // Safety Suggestions - Extreme
+  safetyExtreme1: "STAY INDOORS - Avoid all outdoor activities",
+  safetyExtreme2: "Drink water continuously - do not wait until thirsty",
+  safetyExtreme3: "Keep your environment cool with fans or AC",
+  safetyExtreme4: "Wear minimal, lightweight, light-colored clothing",
+  safetyExtreme5: "Check on vulnerable people: elderly, children, sick individuals",
+  safetyExtreme6: "Know the signs of heat emergency and call emergency services if needed",
+  safetyExtreme7: "Avoid alcohol, caffeine, and sugary drinks",
+  safetyExtreme8: "Take cool showers or baths to lower body temperature",
+  safetyExtreme9: "Signs of heat stroke: body temp above 40°C, confusion, seizures, unconsciousness - SEEK IMMEDIATE MEDICAL HELP",
+  
+  // Safety Suggestions - General Tips
+  safetyGeneral1: "Drink at least 8 glasses of water daily",
+  safetyGeneral2: "Eat light, refreshing meals with fruits and vegetables",
+  safetyGeneral3: "Wear sunscreen with SPF 30 or higher",
+  safetyGeneral4: "Limit physical exertion during hottest parts of the day",
+  safetyGeneral5: "Know the difference between heat exhaustion and heat stroke",
+  safetyGeneral6: "Keep emergency contact numbers handy",
+  safetyGeneral7: "Stay informed about weather updates and heat alerts",
+  
+  // Profile Page
+  loadingProfile: "Loading profile...",
+  myProfileTitle: "My Profile",
+  profileSubtitle: "Manage your personal information and preferences",
+  success: "Success!",
+  error: "Error",
+  yourName: "Your Name",
+  wardNotSet: "Ward Not Set",
+  complete: "Complete",
+  inProgress: "In Progress",
+  incomplete: "Incomplete",
+  enabled: "Enabled",
+  disabled: "Disabled",
+  profileStatus: "Profile Status",
+  requiredFields: "Required Fields",
+  optionalFields: "Optional Fields",
+  quickInformation: "Quick Information",
+  registeredSince: "Registered Since",
+  currentWard: "Current Ward",
+  profileStatusLabel: "Profile Status",
+  heatAlerts: "Heat Alerts",
+  deleteProfile: "Delete Profile",
+  editPhoto: "Edit Photo",
+  
+  // Profile Form
+  personalInformation: "Personal Information",
+  profilePhoto: "Profile Photo",
+  fullName: "Full Name",
+  gender: "Gender",
+  dateOfBirth: "Date of Birth",
+  contactInformation: "Contact Information",
+  mobileNumber: "Mobile Number",
+  emailAddress: "Email Address",
+  address: "Address",
+  wardNumber: "Ward Number",
+  emergencyInformation: "Emergency Information",
+  emergencyContactName: "Emergency Contact Name",
+  emergencyContactNumber: "Emergency Contact Number",
+  healthInformation: "Health Information",
+  bloodGroup: "Blood Group",
+  medicalConditions: "Existing Medical Conditions",
+  preferredLanguage: "Preferred Language",
+  notificationPreferences: "Notification Preferences",
+  saving: "Saving...",
+  saveProfile: "Save Profile",
+  cancel: "Cancel",
+  editProfileBtn: "Edit Profile",
+  selectGender: "Select gender",
+  male: "Male",
+  female: "Female",
+  other: "Other",
+  selectBloodGroup: "Select blood group",
+  selectWard: "Select ward number",
+  ward: "Ward",
+  enterFullName: "Enter your full name",
+  enterMobileNumber: "Enter 10-digit mobile number",
+  enterEmail: "Enter your email address",
+  enterAddress: "Enter your full address",
+  enterEmergencyName: "Enter emergency contact name",
+  enterEmergencyNumber: "Enter 10-digit mobile number",
+  
+  // Medical Conditions
+  conditionDiabetes: "Diabetes",
+  conditionHeartDisease: "Heart Disease",
+  conditionAsthma: "Asthma",
+  conditionHypertension: "Hypertension",
+  conditionElderly: "Elderly (65+)",
+  conditionPregnant: "Pregnant",
+  conditionRespiratory: "Respiratory Issues",
+  conditionKidney: "Kidney Disease",
+  conditionNone: "None",
+  
+  // Notification Settings
+  heatAlertNotifications: "Heat Alert Notifications",
+  receiveHeatAlerts: "Receive alerts when heat levels are high in your ward",
+  emergencyNotifications: "Emergency Notifications",
+  receiveEmergencyNotifs: "Receive critical emergency notifications",
+  emailNotifications: "Email Notifications",
+  receiveEmailNotifs: "Receive notifications via email",
+  smsNotifications: "SMS Notifications",
+  receiveSmsNotifs: "Receive notifications via SMS",
+  
+  // Validation Messages (from validators.js)
+  fullNameRequired: "Full name is required",
+  fullNameMinLength: "Full name must be at least 2 characters long",
+  fullNameMaxLength: "Full name must be at most 50 characters long",
+  fullNameInvalid: "Full name contains invalid characters",
+  mobileRequired: "Mobile number is required",
+  mobileInvalid: "Please enter a valid 10-digit mobile number",
+  emailRequired: "Email address is required",
+  emailInvalid: "Please enter a valid email address",
+  genderRequired: "Gender is required",
+  dobRequired: "Date of birth is required",
+  dobInvalid: "You must be at least 10 years old",
+  dobFuture: "Date of birth cannot be in the future",
+  addressRequired: "Address is required",
+  addressMinLength: "Address must be at least 10 characters long",
+  wardRequired: "Ward number is required",
+  emergencyNameRequired: "Emergency contact name is required",
+  emergencyNameMinLength: "Emergency contact name must be at least 3 characters long",
+  emergencyNumberRequired: "Emergency contact number is required",
+  emergencyNumberInvalid: "Please enter a valid 10-digit mobile number (starting with 6-9)",
+  
+  // Profile completion
+  profileComplete100: "Profile is 100% complete!",
+  profileCompleteMilestone: "Great progress! Continue filling in details.",
+  
+  // Unsaved changes dialog
+  unsavedChangesTitle: "You have unsaved changes. Are you sure you want to discard them?",
+  deleteProfileConfirm: "Are you sure you want to delete your profile? This action cannot be undone.",
+  
+  // Toast
+  toastSuccess: "Profile updated successfully",
+  
+  // WardCard
+  celsius: "Celsius",
+  updated: "Updated: {time}",
+  
+  // Loading
+  loading: "Loading...",
+  loadingWeather: "Loading weather data...",
+  
+  // Empty states
+  noData: "No data available",
+};
+
+export default en;

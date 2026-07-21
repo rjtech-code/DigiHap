@@ -1,6 +1,9 @@
 import React from 'react';
+import { useLanguage } from '../hooks/useLanguage';
 
 const SafetySuggestions = ({ suggestions, title, icon, alertLevel }) => {
+  const { t } = useLanguage();
+
   const getAlertColor = (level) => {
     switch (level) {
       case 'low':

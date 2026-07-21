@@ -1,15 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useProfile } from '../context/ProfileContext';
+import { useLanguage } from '../hooks/useLanguage';
 import ProfileAvatar from './ProfileAvatar';
 import ProfileCompletionRing from './ProfileCompletionRing';
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const langDropdownRef = useRef(null);
   const navigate = useNavigate();
   const { profile, calculateCompletion, deleteProfile } = useProfile();
+  const { t, language, setLanguage, isHindi } = useLanguage();
 
   const completionPercentage = calculateCompletion();
 
@@ -18,6 +22,9 @@ const Navbar = () => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
+      }
+      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target)) {
+        setIsLangDropdownOpen(false);
       }
     };
 
@@ -107,24 +114,70 @@ const Navbar = () => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-6">
             <Link to="/" className="text-gray-700 hover:text-green-600 transition-colors text-sm font-medium">
-              Home
+              {t('home')}
             </Link>
             <Link to="/profile" className="text-gray-700 hover:text-green-600 transition-colors text-sm font-medium">
-              My Profile
+              {t('myProfile')}
             </Link>
           </div>
 
-          {/* Profile Section */}
-          <div className="flex items-center gap-4">
-              {/* Profile Avatar with Dropdown */}
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                  className="focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-full"
-                  aria-label="Profile menu"
-                >
-                  <CircularProgress percentage={completionPercentage} />
-                </button>
+          {/* Profile & Language Section */}
+          <div className="flex items-center gap-3">
+            {/* Language Switcher */}
+            <div className="relative" ref={langDropdownRef}>
+              <button
+                onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 hover:border-green-400 hover:bg-green-50 transition-all text-sm font-medium text-gray-700"
+                aria-label="Language switcher"
+              >
+                <span className="text-base">🌐</span>
+                <span className="hidden sm:inline">
+                  {isHindi ? t('languageHindi') : t('languageEnglish')}
+                </span>
+                <svg className="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+
+              {isLangDropdownOpen && (
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-xl shadow-lg border border-gray-200 py-1 animate-fadeIn z-50">
+                  <button
+                    onClick={() => { setLanguage('en'); setIsLangDropdownOpen(false); }}
+                    className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${language === 'en' ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    <span className="text-base">🇬🇧</span>
+                    {t('languageEnglish')}
+                    {language === 'en' && (
+                      <svg className="w-4 h-4 ml-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => { setLanguage('hi'); setIsLangDropdownOpen(false); }}
+                    className={`w-full flex items-center gap-2 px-4 py-2.5 text-sm transition-colors ${language === 'hi' ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
+                  >
+                    <span className="text-base">🇮🇳</span>
+                    {t('languageHindi')}
+                    {language === 'hi' && (
+                      <svg className="w-4 h-4 ml-auto text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Profile Avatar with Dropdown */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 rounded-full"
+                aria-label={t('profileMenu')}
+              >
+                <CircularProgress percentage={completionPercentage} />
+              </button>
 
               {/* Dropdown Menu */}
               {isDropdownOpen && (
@@ -132,8 +185,8 @@ const Navbar = () => {
                   {profile ? (
                     <>
                       <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm font-medium text-gray-900">{profile.fullName || 'User'}</p>
-                        <p className="text-xs text-gray-500 mt-1">{completionPercentage}% Complete</p>
+                        <p className="text-sm font-medium text-gray-900">{profile.fullName || t('user')}</p>
+                        <p className="text-xs text-gray-500 mt-1">{completionPercentage}{t('percentComplete')}</p>
                       </div>
                       <Link
                         to="/profile"
@@ -143,7 +196,7 @@ const Navbar = () => {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
-                        My Profile
+                        {t('myProfile')}
                       </Link>
                       <Link
                         to="/profile?edit=true"
@@ -153,7 +206,7 @@ const Navbar = () => {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
-                        Edit Profile
+                        {t('editProfile')}
                       </Link>
                       <Link
                         to="/help"
@@ -163,7 +216,7 @@ const Navbar = () => {
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
-                        Help
+                        {t('help')}
                       </Link>
                       <div className="border-t border-gray-100 mt-2 pt-2">
                         <button
@@ -173,19 +226,19 @@ const Navbar = () => {
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                           </svg>
-                          Logout
+                          {t('logout')}
                         </button>
                       </div>
                     </>
                   ) : (
                     <div className="px-4 py-3">
-                      <p className="text-sm text-gray-600 mb-3">No profile created yet</p>
+                      <p className="text-sm text-gray-600 mb-3">{t('noProfileCreated')}</p>
                       <Link
                         to="/profile"
                         onClick={() => setIsDropdownOpen(false)}
                         className="block w-full text-center px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                       >
-                        Create Profile
+                        {t('createProfile')}
                       </Link>
                     </div>
                   )}
@@ -197,7 +250,7 @@ const Navbar = () => {
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="md:hidden p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors"
-              aria-label="Toggle mobile menu"
+              aria-label={t('toggleMobileMenu')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 {isMobileMenuOpen ? (
@@ -218,15 +271,30 @@ const Navbar = () => {
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
             >
-              Home
+              {t('home')}
             </Link>
             <Link
               to="/profile"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
             >
-              My Profile
+              {t('myProfile')}
             </Link>
+            {/* Mobile Language Options */}
+            <div className="border-t border-gray-100 mt-2 pt-2 px-3">
+              <button
+                onClick={() => { setLanguage('en'); setIsMobileMenuOpen(false); }}
+                className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${language === 'en' ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                🌐 {t('languageEnglish')}
+              </button>
+              <button
+                onClick={() => { setLanguage('hi'); setIsMobileMenuOpen(false); }}
+                className={`w-full text-left px-3 py-2 text-sm rounded-lg transition-colors ${language === 'hi' ? 'bg-green-50 text-green-700 font-medium' : 'text-gray-700 hover:bg-gray-50'}`}
+              >
+                🌐 {t('languageHindi')}
+              </button>
+            </div>
           </div>
         )}
       </div>

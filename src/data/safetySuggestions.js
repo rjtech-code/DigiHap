@@ -1,64 +1,65 @@
 // Safety suggestions based on temperature ranges
 // These are hardcoded and do not come from the weather API
+// Returns translation keys to support English/Hindi switching
 
 export const getSafetySuggestions = (temperature) => {
   if (temperature < 35) {
     return {
-      title: 'Normal Conditions',
+      titleKey: 'safetyNormal',
       icon: '☀️',
-      suggestions: [
-        'Enjoy your day with normal precautions',
-        'Stay hydrated by drinking water regularly',
-        'Wear comfortable, light clothing',
-        'Use sunscreen when going outdoors',
-        'Take breaks in shaded areas if needed'
+      suggestionKeys: [
+        'safetyNormal1',
+        'safetyNormal2',
+        'safetyNormal3',
+        'safetyNormal4',
+        'safetyNormal5'
       ],
       alertLevel: 'low'
     };
   } else if (temperature >= 35 && temperature < 40) {
     return {
-      title: 'Moderate Heat - Stay Alert',
+      titleKey: 'safetyModerate',
       icon: '🌤️',
-      suggestions: [
-        'Drink plenty of water throughout the day',
-        'Wear light-colored, loose-fitting clothes',
-        'Avoid prolonged exposure to direct sunlight',
-        'Take frequent breaks in cool or shaded areas',
-        'Watch for signs of heat exhaustion',
-        'Limit outdoor activities during peak hours (12 PM - 4 PM)'
+      suggestionKeys: [
+        'safetyModerate1',
+        'safetyModerate2',
+        'safetyModerate3',
+        'safetyModerate4',
+        'safetyModerate5',
+        'safetyModerate6'
       ],
       alertLevel: 'moderate'
     };
   } else if (temperature >= 40 && temperature < 45) {
     return {
-      title: 'High Heat - Take Precautions',
+      titleKey: 'safetyHigh',
       icon: '🌡️',
-      suggestions: [
-        'Avoid outdoor activities as much as possible',
-        'Drink water every 15-20 minutes, even if not thirsty',
-        'Wear a hat, sunglasses, and sunscreen (SPF 30+)',
-        'Stay in air-conditioned or well-ventilated areas',
-        'Check on elderly family members and neighbors',
-        'Never leave children or pets in parked vehicles',
-        'Reschedule outdoor work to early morning or evening',
-        'Recognize signs of heat stroke: high body temperature, confusion, loss of consciousness'
+      suggestionKeys: [
+        'safetyHigh1',
+        'safetyHigh2',
+        'safetyHigh3',
+        'safetyHigh4',
+        'safetyHigh5',
+        'safetyHigh6',
+        'safetyHigh7',
+        'safetyHigh8'
       ],
       alertLevel: 'high'
     };
   } else {
     return {
-      title: 'Extreme Heat Alert - Danger',
+      titleKey: 'safetyExtreme',
       icon: '🚨',
-      suggestions: [
-        'STAY INDOORS - Avoid all outdoor activities',
-        'Drink water continuously - do not wait until thirsty',
-        'Keep your environment cool with fans or AC',
-        'Wear minimal, lightweight, light-colored clothing',
-        'Check on vulnerable people: elderly, children, sick individuals',
-        'Know the signs of heat emergency and call emergency services if needed',
-        'Avoid alcohol, caffeine, and sugary drinks',
-        'Take cool showers or baths to lower body temperature',
-        'Signs of heat stroke: body temp above 40°C, confusion, seizures, unconsciousness - SEEK IMMEDIATE MEDICAL HELP'
+      suggestionKeys: [
+        'safetyExtreme1',
+        'safetyExtreme2',
+        'safetyExtreme3',
+        'safetyExtreme4',
+        'safetyExtreme5',
+        'safetyExtreme6',
+        'safetyExtreme7',
+        'safetyExtreme8',
+        'safetyExtreme9'
       ],
       alertLevel: 'extreme'
     };
@@ -67,16 +68,16 @@ export const getSafetySuggestions = (temperature) => {
 
 export const getGeneralHeatTips = () => {
   return {
-    title: 'General Heat Safety Tips',
+    titleKey: 'safetyGeneral',
     icon: '💡',
-    suggestions: [
-      'Drink at least 8 glasses of water daily',
-      'Eat light, refreshing meals with fruits and vegetables',
-      'Wear sunscreen with SPF 30 or higher',
-      'Limit physical exertion during hottest parts of the day',
-      'Know the difference between heat exhaustion and heat stroke',
-      'Keep emergency contact numbers handy',
-      'Stay informed about weather updates and heat alerts'
+    suggestionKeys: [
+      'safetyGeneral1',
+      'safetyGeneral2',
+      'safetyGeneral3',
+      'safetyGeneral4',
+      'safetyGeneral5',
+      'safetyGeneral6',
+      'safetyGeneral7'
     ]
   };
 };

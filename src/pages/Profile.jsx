@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useProfile } from '../hooks/useProfile';
 import { useSearchParams } from 'react-router-dom';
+import { useLanguage } from '../hooks/useLanguage';
 import ProfileAvatar from '../components/ProfileAvatar';
 import ProfileCompletionRing from '../components/ProfileCompletionRing';
 import ProfileForm from '../components/ProfileForm';
@@ -11,6 +12,7 @@ const Profile = () => {
   const isEditMode = searchParams.get('edit') === 'true';
   const [isEditing, setIsEditing] = useState(isEditMode);
   const fileInputRef = useRef(null);
+  const { t } = useLanguage();
   
   const { 
     profile, 
@@ -187,7 +189,7 @@ const Profile = () => {
 
   const handleCancel = () => {
     if (hasUnsavedChanges) {
-      if (!window.confirm('You have unsaved changes. Are you sure you want to discard them?')) {
+      if (!window.confirm(t('unsavedChangesTitle'))) {
         return;
       }
     }
@@ -222,7 +224,7 @@ const Profile = () => {
   };
 
   const handleDeleteProfile = () => {
-    if (window.confirm('Are you sure you want to delete your profile? This action cannot be undone.')) {
+    if (window.confirm(t('deleteProfileConfirm'))) {
       deleteUserProfile();
       setFormData({
         profilePhoto: '',
@@ -257,7 +259,7 @@ const Profile = () => {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-orange-50 flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading profile...</p>
+          <p className="text-gray-600">{t('loadingProfile')}</p>
         </div>
       </div>
     );
@@ -268,8 +270,8 @@ const Profile = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Profile</h1>
-          <p className="text-gray-600">Manage your personal information and preferences</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('myProfileTitle')}</h1>
+          <p className="text-gray-600">{t('profileSubtitle')}</p>
         </div>
 
         {/* Success/Error Messages */}
@@ -279,7 +281,7 @@ const Profile = () => {
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
             </svg>
             <div>
-              <p className="font-medium text-green-900">Success!</p>
+              <p className="font-medium text-green-900">{t('success')}</p>
               <p className="text-sm text-green-700">{success}</p>
             </div>
           </div>
@@ -291,7 +293,7 @@ const Profile = () => {
               <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
             </svg>
             <div>
-              <p className="font-medium text-red-900">Error</p>
+              <p className="font-medium text-red-900">{t('error')}</p>
               <p className="text-sm text-red-700">{error}</p>
             </div>
           </div>
@@ -316,15 +318,15 @@ const Profile = () => {
 
                 <div className="mt-6 text-center">
                   <h2 className="text-xl font-bold text-gray-900">
-                    {formData.fullName || 'Your Name'}
+                    {formData.fullName || t('yourName')}
                   </h2>
                   <p className="text-sm text-gray-500 mt-1">
-                    {formData.wardNumber ? `Ward ${formData.wardNumber}` : 'Ward Not Set'}
+                    {formData.wardNumber ? `${t('ward')} ${formData.wardNumber}` : t('wardNotSet')}
                   </p>
                   <div className="mt-3 inline-flex items-center gap-2 px-3 py-1.5 bg-green-50 border border-green-200 rounded-full">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <span className="text-sm font-medium text-green-700">
-                      {completionPercentage}% Complete
+                      {completionPercentage}{t('percentComplete')}
                     </span>
                   </div>
                 </div>
@@ -341,17 +343,17 @@ const Profile = () => {
                     onClick={() => fileInputRef.current?.click()}
                     className="mt-4 px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
                   >
-                    Edit Photo
+                    {t('editPhoto')}
                   </button>
                 )}
               </div>
 
               {/* Profile Stats */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-sm font-semibold text-gray-900 mb-4">Profile Status</h3>
+                <h3 className="text-sm font-semibold text-gray-900 mb-4">{t('profileStatus')}</h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Required Fields</span>
+                    <span className="text-sm text-gray-600">{t('requiredFields')}</span>
                     <span className="text-sm font-medium text-gray-900">
                       {completionBreakdown.required.completed}/{completionBreakdown.required.total}
                     </span>
@@ -363,7 +365,7 @@ const Profile = () => {
                     ></div>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Optional Fields</span>
+                    <span className="text-sm text-gray-600">{t('optionalFields')}</span>
                     <span className="text-sm font-medium text-gray-900">
                       {completionBreakdown.optional.completed}/{completionBreakdown.optional.total}
                     </span>
@@ -380,22 +382,22 @@ const Profile = () => {
               {/* Quick Info */}
               {profile && profile.fullName && (
                 <div className="mt-6 pt-6 border-t border-gray-200">
-                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Quick Information</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-4">{t('quickInformation')}</h3>
                   <div className="space-y-2.5">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Registered Since</span>
+                      <span className="text-gray-600">{t('registeredSince')}</span>
                       <span className="font-medium text-gray-900">
                         {profile.createdAt ? new Date(profile.createdAt).toLocaleDateString('en-IN') : 'N/A'}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Current Ward</span>
+                      <span className="text-gray-600">{t('currentWard')}</span>
                       <span className="font-medium text-gray-900">
-                        {profile.wardNumber ? `Ward ${profile.wardNumber}` : 'Not Set'}
+                        {profile.wardNumber ? `${t('ward')} ${profile.wardNumber}` : t('wardNotSet')}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Profile Status</span>
+                      <span className="text-gray-600">{t('profileStatusLabel')}</span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         completionPercentage === 100 
                           ? 'bg-green-100 text-green-700' 
@@ -403,17 +405,17 @@ const Profile = () => {
                           ? 'bg-blue-100 text-blue-700' 
                           : 'bg-orange-100 text-orange-700'
                       }`}>
-                        {completionPercentage === 100 ? 'Complete' : completionPercentage >= 50 ? 'In Progress' : 'Incomplete'}
+                        {completionPercentage === 100 ? t('complete') : completionPercentage >= 50 ? t('inProgress') : t('incomplete')}
                       </span>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Heat Alerts</span>
+                      <span className="text-gray-600">{t('heatAlerts')}</span>
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                         profile.receiveHeatAlerts 
                           ? 'bg-green-100 text-green-700' 
                           : 'bg-gray-100 text-gray-700'
                       }`}>
-                        {profile.receiveHeatAlerts ? 'Enabled' : 'Disabled'}
+                        {profile.receiveHeatAlerts ? t('enabled') : t('disabled')}
                       </span>
                     </div>
                   </div>
@@ -427,7 +429,7 @@ const Profile = () => {
                     onClick={handleDeleteProfile}
                     className="w-full px-4 py-2 text-red-600 border border-red-300 rounded-lg hover:bg-red-50 transition-colors text-sm font-medium"
                   >
-                    Delete Profile
+                    {t('deleteProfile')}
                   </button>
                 </div>
               )}
@@ -460,7 +462,7 @@ const Profile = () => {
             <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
           </svg>
           <div>
-            <p className="font-medium">Success!</p>
+            <p className="font-medium">{t('success')}</p>
             <p className="text-sm text-green-100">{success}</p>
           </div>
         </div>
