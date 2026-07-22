@@ -7,6 +7,7 @@ import NotificationSettings from './NotificationSettings';
 /**
  * ProfileForm Component
  * Complete profile form with all sections
+ * Note: Action buttons (Edit, Save, Cancel) are now in the Profile page header
  */
 const ProfileForm = ({ 
   formData, 
@@ -38,13 +39,13 @@ const ProfileForm = ({
   const wardNumbers = Array.from({ length: 60 }, (_, i) => i + 1);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const finalValue = type === 'checkbox' ? checked : value;
-    onChange({ ...formData, [name]: finalValue });
+    // Forward the event directly to parent handler
+    onChange(e);
   };
 
   const handleNotificationChange = (key, value) => {
-    onChange({ ...formData, [key]: value });
+    // Create a synthetic event-like object for checkboxes
+    onChange({ target: { name: key, value, type: 'checkbox' } });
   };
 
   // Map conditions to translation keys
@@ -401,34 +402,6 @@ const ProfileForm = ({
         />
       </ProfileCard>
 
-      {/* Action Buttons */}
-      {isEditing ? (
-        <div className="flex gap-3">
-          <button
-            onClick={onSave}
-            disabled={isSaving}
-            className="flex-1 px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isSaving ? t('saving') : t('saveProfile')}
-          </button>
-          <button
-            onClick={onCancel}
-            disabled={isSaving}
-            className="px-6 py-3 border border-gray-300 text-gray-700 font-medium rounded-lg hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {t('cancel')}
-          </button>
-        </div>
-      ) : (
-        <div>
-          <button
-            onClick={onEdit}
-            className="w-full px-6 py-3 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors shadow-sm"
-          >
-            {t('editProfileBtn')}
-          </button>
-        </div>
-      )}
     </div>
   );
 };

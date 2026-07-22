@@ -100,8 +100,10 @@ const Profile = () => {
   }, [hasUnsavedChanges]);
 
   const handleInputChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    const finalValue = type === 'checkbox' ? checked : value;
+    // Handle both real events and synthetic event objects
+    const target = e.target || e;
+    const { name, value, type } = target;
+    const finalValue = type === 'checkbox' ? target.checked : value;
     
     setFormData(prev => ({
       ...prev,
@@ -250,8 +252,17 @@ const Profile = () => {
     }
   };
 
+  // Derived values (must be before any returns)
+  const showCreateProfileState = !profile || !profile.fullName;
   const completionMessage = getCompletionMessage(completionPercentage);
   const completionBreakdown = getCompletionBreakdown(profile);
+
+  // Auto-enable edit mode if no profile exists
+  useEffect(() => {
+    if (showCreateProfileState && !isEditing) {
+      setIsEditing(true);
+    }
+  }, [showCreateProfileState, isEditing]);
 
   // Show loading state only on initial load
   if (isLoading) {
@@ -269,9 +280,58 @@ const Profile = () => {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-orange-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('myProfileTitle')}</h1>
-          <p className="text-gray-600">{t('profileSubtitle')}</p>
+        <div className="mb-8 flex items-start justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {showCreateProfileState ? t('createProfileTitle') || 'Create Your Profile' : t('myProfileTitle')}
+            </h1>
+            <p className="text-gray-600">
+              {showCreateProfileState ? t('createProfileSubtitle') || 'Let\'s get started by creating your profile' : t('profileSubtitle')}
+            </p>
+          </div>
+          
+          {/* Edit Profile Button - Top Right */}
+          {!isEditing ? (
+            <button
+              onClick={handleEdit}
+              disabled={isLoading || isSaving}
+              className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              {showCreateProfileState ? (t('createProfile') || 'Create Profile') : (t('editProfile') || 'Edit Profile')}
+            </button>
+          ) : (
+            <div className="flex items-center gap-3">
+              <button
+                onClick={handleCancel}
+                disabled={isSaving}
+                className="px-6 py-2.5 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
+              >
+                {t('cancel') || 'Cancel'}
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={isSaving}
+                className="px-6 py-2.5 bg-green-600 text-white font-medium rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center gap-2"
+              >
+                {isSaving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {t('saving') || 'Saving...'}
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {showCreateProfileState ? (t('createProfile') || 'Create Profile') : (t('saveChanges') || 'Save Changes')}
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Success/Error Messages */}
