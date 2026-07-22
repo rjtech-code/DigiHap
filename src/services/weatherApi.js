@@ -10,48 +10,115 @@ const BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const weatherCache = new Map();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-export const fetchWeather = async (latitude, longitude) => {
+// In-flight request tracker — same coordinates ke liye ek saath 2 calls
+// aayein (e.g. Home grid + WardDetails page dono mount ho jayein) to
+// dono ek hi promise share karenge, duplicate network call nahi hogi.
+const inFlightRequests = new Map();
+
+export const fetchWeather = async (latitude, longitude, { signal } = {}) => {
   const cacheKey = `${latitude},${longitude}`;
-  
+
   // Check cache first
   const cachedData = weatherCache.get(cacheKey);
   if (cachedData && Date.now() - cachedData.timestamp < CACHE_DURATION) {
     return cachedData.data;
   }
 
-  try {
-    const response = await axios.get(BASE_URL, {
-      params: {
-        lat: latitude,
-        lon: longitude,
-        appid: API_KEY,
-        units: 'metric' // Get temperature in Celsius
-      },
-      timeout: 10000 // 10 second timeout
-    });
-
-    const weatherData = {
-      temperature: Math.round(response.data.main.temp),
-      feelsLike: Math.round(response.data.main.feels_like),
-      humidity: response.data.main.humidity,
-      windSpeed: response.data.wind.speed,
-      condition: response.data.weather[0].main,
-      description: response.data.weather[0].description,
-      lastUpdated: new Date().toISOString()
-    };
-
-    // Cache the result
-    weatherCache.set(cacheKey, {
-      data: weatherData,
-      timestamp: Date.now()
-    });
-
-    return weatherData;
-  } catch (error) {
-    // Silently fall back to mock data for demo purposes
-    // In production, you would show an error message to the user
-    return getMockWeatherData(latitude, longitude);
+  // Agar isi coordinate ke liye request already chal rahi hai, usi ko reuse karo
+  if (inFlightRequests.has(cacheKey)) {
+    return inFlightRequests.get(cacheKey);
   }
+
+  const requestPromise = (async () => {
+    try {
+      const response = await axios.get(BASE_URL, {
+        params: {
+          lat: latitude,
+          lon: longitude,
+          appid: API_KEY,
+          units: 'metric' // Get temperature in Celsius
+        },
+        timeout: 10000, // 10 second timeout
+        signal
+      });
+
+      const weatherData = {
+        temperature: Math.round(response.data.main.temp),
+        feelsLike: Math.round(response.data.main.feels_like),
+        humidity: response.data.main.humidity,
+        windSpeed: response.data.wind.speed,
+        condition: response.data.weather[0].main,
+        description: response.data.weather[0].description,
+        lastUpdated: new Date().toISOString(),
+        isMockData: false
+      };
+
+      // Cache the result
+      weatherCache.set(cacheKey, {
+        data: weatherData,
+        timestamp: Date.now()
+      });
+
+      return weatherData;
+    } catch (error) {
+      if (axios.isCancel(error) || error.name === 'CanceledError') {
+        throw error; // cancel ko upar hi propagate hone do, mock data mat do
+      }
+      // Silently fall back to mock data for demo purposes
+      // (console me warning zaroor rehti hai taaki dev ko pata chale)
+      console.warn(
+        `Weather API fail hua (${latitude}, ${longitude}): ${error.message}. Mock data use ho raha hai.`
+      );
+      return getMockWeatherData(latitude, longitude);
+    } finally {
+      inFlightRequests.delete(cacheKey);
+    }
+  })();
+
+  inFlightRequests.set(cacheKey, requestPromise);
+  return requestPromise;
+};
+
+/**
+ * Sabhi wards ka weather ek saath fetch karta hai — lekin chunks me,
+ * taaki free-tier rate limit (60 calls/min) cross na ho.
+ *
+ * @param {Array<{id:number, latitude:number, longitude:number}>} wardList
+ * @param {object} options
+ * @param {number} options.chunkSize kitne parallel calls ek batch me (default 10)
+ * @param {AbortSignal} options.signal component unmount hone par cancel karne ke liye
+ * @returns {Promise<Record<number, object>>} { [wardId]: weatherData }
+ */
+export const fetchAllWardsWeather = async (wardList, { chunkSize = 10, signal } = {}) => {
+  const result = {};
+
+  for (let i = 0; i < wardList.length; i += chunkSize) {
+    if (signal?.aborted) break;
+
+    const chunk = wardList.slice(i, i + chunkSize);
+
+    const chunkResults = await Promise.all(
+      chunk.map(async (ward) => {
+        try {
+          const weather = await fetchWeather(ward.latitude, ward.longitude, { signal });
+          return { id: ward.id, weather };
+        } catch (err) {
+          if (axios.isCancel(err) || err.name === 'CanceledError') {
+            return { id: ward.id, weather: null, cancelled: true };
+          }
+          return { id: ward.id, weather: null };
+        }
+      })
+    );
+
+    if (signal?.aborted) break;
+
+    chunkResults.forEach(({ id, weather, cancelled }) => {
+      if (!cancelled) result[id] = weather;
+    });
+  }
+
+  return result;
 };
 
 // Mock weather data for demo/fallback purposes

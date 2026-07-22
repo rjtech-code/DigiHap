@@ -1,3 +1,4 @@
+// src/data/wards.js
 // Ward data for all 60 wards of Churu, Rajasthan
 // Coordinates are approximate for the Churu city area
 

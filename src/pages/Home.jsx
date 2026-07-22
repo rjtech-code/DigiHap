@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { wards } from '../data/wards';
-import { fetchWeather } from '../services/weatherApi';
+import { fetchAllWardsWeather } from '../services/weatherApi';
 import { useLanguage } from '../hooks/useLanguage';
 import WardCard from '../components/WardCard';
 import SearchBar from '../components/SearchBar';
@@ -18,9 +18,14 @@ const Home = () => {
   const [showMap, setShowMap] = useState(false);
   const [closingMobileMap, setClosingMobileMap] = useState(false);
   const { t } = useLanguage();
+  const abortControllerRef = useRef(null);
 
   useEffect(() => {
     loadWeatherData();
+    // Component unmount hone par pending requests cancel kar do
+    return () => {
+      abortControllerRef.current?.abort();
+    };
   }, []);
 
   // Load map lazily after initial page load
@@ -32,32 +37,29 @@ const Home = () => {
   }, []);
 
   const loadWeatherData = async () => {
+    // Pichli koi request chal rahi ho to usse cancel karke nayi shuru karo
+    abortControllerRef.current?.abort();
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       setLoading(true);
       setError(null);
-      
-      const promises = wards.map(async (ward) => {
-        try {
-          const weather = await fetchWeather(ward.latitude, ward.longitude);
-          return { id: ward.id, weather };
-        } catch (err) {
-          console.error(`Error fetching weather for ward ${ward.id}:`, err);
-          return { id: ward.id, weather: null };
-        }
-      });
 
-      const results = await Promise.all(promises);
-      
-      const weatherMap = {};
-      results.forEach(result => {
-        weatherMap[result.id] = result.weather;
-      });
-      
-      setWeatherData(weatherMap);
+      // Sabhi wards ka weather ek saath — lekin safe batches me — fetch hota hai
+      const weatherMap = await fetchAllWardsWeather(wards, { signal: controller.signal });
+
+      if (!controller.signal.aborted) {
+        setWeatherData(weatherMap);
+      }
     } catch (err) {
-      setError(t('errorLoadingData'));
+      if (!controller.signal.aborted) {
+        setError(t('errorLoadingData'));
+      }
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {
+        setLoading(false);
+      }
     }
   };
 
